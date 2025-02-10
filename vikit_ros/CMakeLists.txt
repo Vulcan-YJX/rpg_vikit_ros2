@@ -1,6 +1,6 @@
 SET(PROJECT_NAME vikit_ros)
 PROJECT(${PROJECT_NAME})
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.3)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
 SET(CMAKE_BUILD_TYPE Release) # Release, RelWithDebInfo
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 
@@ -13,30 +13,8 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
 
-# Add catkin and required ROS packages
-FIND_PACKAGE(catkin REQUIRED COMPONENTS roscpp vikit_common visualization_msgs tf cmake_modules)
-
-# Add plain cmake packages 
-FIND_PACKAGE(OpenCV REQUIRED)
-find_package(Eigen3 REQUIRED)
-FIND_PACKAGE(Sophus REQUIRED)
-
-# Include dirs
-INCLUDE_DIRECTORIES(
-  include
-  ${EIGEN3_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
-  ${Sophus_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
-)
-
-# Describe catkin Project
-catkin_package(
-    DEPENDS EIGEN3 OpenCV Sophus vikit_common
-    CATKIN_DEPENDS roscpp visualization_msgs tf 
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-)
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 
 # Set Sourcefiles
 LIST(APPEND SOURCEFILES 
@@ -44,9 +22,11 @@ LIST(APPEND SOURCEFILES
 )
 
 # Create vikit library
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCEFILES})
-TARGET_LINK_LIBRARIES(
-  ${PROJECT_NAME}
-  ${OpenCV_LIBS}
-  ${Sophus_LIBRARIES}
-  ${catkin_LIBRARIES})
+ament_auto_add_library(${PROJECT_NAME} SHARED ${SOURCEFILES})
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_auto_package()

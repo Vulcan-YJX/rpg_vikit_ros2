@@ -9,7 +9,7 @@
 #define VIKIT_OUTPUT_HELPER_H_
 
 #include <string>
-#include <ros/ros.h>
+#include "rclcpp/rclcpp.hpp"
 #include <Eigen/Core>
 #include <sophus/se3.h>
 #include <tf/transform_broadcaster.h>
