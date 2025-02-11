@@ -1,18 +1,30 @@
-/*
- * output_helper.h
- *
- *  Created on: Jan 20, 2013
- *      Author: cforster
- */
+// Copyright (c) 2023 VulcanYJX
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef VIKIT_OUTPUT_HELPER_H_
 #define VIKIT_OUTPUT_HELPER_H_
 
 #include <string>
+#include <memory>
 #include "rclcpp/rclcpp.hpp"
 #include <Eigen/Core>
 #include <sophus/se3.h>
-#include <tf/transform_broadcaster.h>
+#include <visualization_msgs/msg/marker.hpp>
+
+#include "tf2_ros/transform_broadcaster.h"
+// #include <tf/transform_broadcaster.h>
 
 namespace vk {
 namespace output_helper {
@@ -21,73 +33,73 @@ using namespace std;
 using namespace Eigen;
 
 void
-publishTfTransform      (const Sophus::SE3& T, const ros::Time& stamp,
+publishTfTransform      (const Sophus::SE3& T, const rclcpp::Time& stamp,
                          const string& frame_id, const string& child_frame_id,
-                         tf::TransformBroadcaster& br);
+                         std::shared_ptr<tf2_ros::TransformBroadcaster> br);
 
 void
-publishPointMarker      (ros::Publisher pub,
+publishPointMarker      (rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub,
                          const Vector3d& pos,
                          const string& ns,
-                         const ros::Time& timestamp,
+                         const rclcpp::Time &timestamp,
                          int id,
                          int action,
                          double marker_scale,
                          const Vector3d& color,
-                         ros::Duration lifetime = ros::Duration(0.0));
+                         rclcpp::Duration lifetime = rclcpp::Duration(std::chrono::nanoseconds(0)));
 
 void
-publishLineMarker       (ros::Publisher pub,
+publishLineMarker       (rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub,
                          const Vector3d& start,
                          const Vector3d& end,
                          const string& ns,
-                         const ros::Time& timestamp,
+                         const rclcpp::Time& timestamp,
                          int id,
                          int action,
                          double marker_scale,
                          const Vector3d& color,
-                         ros::Duration lifetime = ros::Duration(0.0));
+                         rclcpp::Duration lifetime = rclcpp::Duration(std::chrono::nanoseconds(0)));
 
 void
-publishArrowMarker      (ros::Publisher pub,
+publishArrowMarker      (rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub,
                          const Vector3d& pos,
                          const Vector3d& dir,
                          double scale,
                          const string& ns,
-                         const ros::Time& timestamp,
+                         const rclcpp::Time& timestamp,
                          int id,
                          int action,
                          double marker_scale,
                          const Vector3d& color);
 
 void
-publishHexacopterMarker (ros::Publisher pub,
+publishHexacopterMarker (rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr pub,
                          const string& frame_id,
                          const string& ns,
-                         const ros::Time& timestamp,
+                         const rclcpp::Time& timestamp,
                          int id,
                          int action,
                          double marker_scale,
                          const Vector3d& color);
 
 void
-publishCameraMarker(ros::Publisher pub,
+publishCameraMarker(rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr& pub,
                     const string& frame_id,
                     const string& ns,
-                    const ros::Time& timestamp,
+                    const rclcpp::Time& timestamp,
                     int id,
                     double marker_scale,
                     const Vector3d& color);
 void
-publishFrameMarker     (ros::Publisher pub,
+publishFrameMarker     (rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr& pub,
                         const Matrix3d& rot,
                         const Vector3d& pos,
                         const string& ns,
-                        const ros::Time& timestamp,
+                        const rclcpp::Time& timestamp,
                         int id,
                         int action,
                         double marker_scale,
-                        ros::Duration lifetime = ros::Duration(0.0));
+                        rclcpp::Duration lifetime = rclcpp::Duration(std::chrono::nanoseconds(0)));
 
 
 } // namespace output_helper

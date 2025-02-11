@@ -55,7 +55,7 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 target_link_libraries(${PROJECT_NAME}
   ${OpenCV_LIBS}
   ${Sophus_LIBRARIES}
-  ${catkin_LIBRARIES})
+  )
 
 # Tests
 add_executable(test_vk_common_camera test/test_camera.cpp)
@@ -67,18 +67,9 @@ target_link_libraries(test_vk_common_triangulation ${PROJECT_NAME})
 add_executable(test_vk_common_patch_score test/test_patch_score.cpp)
 target_link_libraries(test_vk_common_patch_score ${PROJECT_NAME})
 
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
 
-################################################################################
-# Create the vikit_commonConfig.cmake file for other cmake projects.
-# IF(NOT USE_ROS)
-#   GET_TARGET_PROPERTY( FULL_LIBRARY_NAME ${PROJECT_NAME} LOCATION )
-#   SET(vikit_common_LIBRARIES ${FULL_LIBRARY_NAME} )
-#   SET(vikit_common_LIBRARY_DIR ${PROJECT_BINARY_DIR} )
-#   SET(vikit_common_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
-#   CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/vikit_commonConfig.cmake.in
-#       ${CMAKE_CURRENT_BINARY_DIR}/vikit_commonConfig.cmake @ONLY IMMEDIATE )
-#   export( PACKAGE vikit_common )
-
-#   INSTALL(DIRECTORY include/vikit DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATCHING PATTERN "*.h" )
-#   INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
-# ENDIF()
+ament_auto_package()
